@@ -78,16 +78,17 @@ public class Build {
     printSelfLoopers(vertex, new HashSet<>());
   }
 
-  private static <T> void printSelfLoopers(Vertex<T> vertex, HashSet<T> seen){
+  private static <T> void printSelfLoopers(Vertex<T> vertex, HashSet<Vertex<T>> seen){
     if (vertex == null) return;
-    if (seen.contains(vertex.data)) return;
+    if (seen.contains(vertex)) return;
 
-    seen.add(vertex.data);
+    seen.add(vertex);
 
+    if (vertex.neighbors.contains(vertex)) {
+      System.out.println(vertex.data);
+    }
     for (Vertex<T> neighbor : vertex.neighbors) {
-      if (neighbor.neighbors.size() > 0) {
-        System.out.println(neighbor);
-      }
+      printSelfLoopers(neighbor, seen);
     }
     
   }
