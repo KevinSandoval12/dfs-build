@@ -14,6 +14,24 @@ public class Build {
    * @param k the maximum word length (exclusive)
    */
   public static void printShortWords(Vertex<String> vertex, int k) {
+
+
+    printShortWords(vertex, k, new HashSet<>());
+  }
+
+  private static void printShortWords(Vertex<String> vertex, int k, HashSet<String> seen) {
+    if (vertex == null) return;
+    if (seen.contains(vertex.data)) return;
+
+    seen.add(vertex.data);
+
+    if (vertex.data.length() < k){
+      System.out.println(vertex.data);
+    };
+
+    for (Vertex<String> neighbor : vertex.neighbors) {
+      printShortWords(neighbor, k, seen);
+    }
   }
 
   /**
@@ -23,7 +41,29 @@ public class Build {
    * @return the longest reachable word, or an empty string if the vertex is null
    */
   public static String longestWord(Vertex<String> vertex) {
-    return "";
+
+    return longestWord(vertex, new HashSet<>(), "");
+    
+  }
+
+  private static String longestWord(Vertex<String> vertex, HashSet<String> seen, String max) {
+    if (vertex == null) return "";
+    if (seen.contains(vertex.data)) return "";
+
+    seen.add(vertex.data);
+
+    if (vertex.data.length() > max.length()) {
+      max = vertex.data;
+    }
+
+    for (Vertex<String> neighbor : vertex.neighbors) {
+      String result = longestWord(neighbor, seen, max);
+      if (result.length() > max.length()) {
+        max = result;
+      }
+    }
+
+    return max;
   }
 
   /**
@@ -34,7 +74,25 @@ public class Build {
    * @param <T> the type of values stored in the vertices
    */
   public static <T> void printSelfLoopers(Vertex<T> vertex) {
+
+    printSelfLoopers(vertex, new HashSet<>());
   }
+
+  private static <T> void printSelfLoopers(Vertex<T> vertex, HashSet<T> seen){
+    if (vertex == null) return;
+    if (seen.contains(vertex.data)) return;
+
+    seen.add(vertex.data);
+
+    for (Vertex<T> neighbor : vertex.neighbors) {
+      if (neighbor.neighbors.size() > 0) {
+        System.out.println(neighbor);
+      }
+    }
+    
+  }
+
+  
 
   /**
    * Determines whether it is possible to reach the destination airport through a series of flights
